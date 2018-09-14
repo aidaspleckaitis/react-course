@@ -1,12 +1,14 @@
 import React from 'react';
+import PropTypes from "prop-types"
 import Section from './Section';
 import SectionWithLists from './SectionWithLists';
 import './index.css';
 import data from "./data";
 
-function Main() {
+function Main(props) {
 
-  const { education, skills, experience, hobbies, reference } = data;
+  const { language } = props;
+  const { education, skills, experience, hobbies, reference } = data[language];
 
   return (
     <main className="Content">
@@ -33,6 +35,10 @@ function Main() {
       />
     </main>
   );
+}
+
+Main.propTypes = {
+  language: PropTypes.string.isRequired
 }
 
 export default Main;
