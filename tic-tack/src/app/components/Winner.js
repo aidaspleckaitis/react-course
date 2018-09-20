@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 function Winner(props) {
-  const { winner, onclick, nr } = props;
+  const { winner, onclick } = props;
 
   const message = winner ? `Winner is: ${winner.icon}` : 'Nobody won :(';
 
@@ -17,9 +17,12 @@ function Winner(props) {
 }
 
 Winner.propTypes = {
-  winner: PropTypes.shape({}).isRequired,
+  winner: PropTypes.shape({}),
   onclick: PropTypes.func.isRequired,
-  nr: PropTypes.number.isRequired,
+};
+
+Winner.defaultProps = {
+  winner: undefined,
 };
 
 export default Winner;

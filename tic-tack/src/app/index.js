@@ -1,6 +1,7 @@
 import React from 'react';
 import { WINNING_COMBOS } from '../constants';
 import Winner from './components/Winner';
+import Game from './components/Game/index';
 
 const dimensions = 3;
 const endgame = dimensions ** 2 - 1;
@@ -20,11 +21,10 @@ class App extends React.Component {
     };
   }
 
-  isWinner = (newGameData, player) => {
-    return WINNING_COMBOS.some(combo =>
+  isWinner = (newGameData, player) =>
+    WINNING_COMBOS.some(combo =>
       combo.every(([row, box]) => newGameData[row][box] === player.icon)
     );
-  };
 
   onClick = ({ row, box }) => {
     const { gameData, turn, players } = this.state;
@@ -50,25 +50,6 @@ class App extends React.Component {
     return Object.values(players).find(player => player.winner === true);
   };
 
-  renderGame = () => {
-    const { gameData } = this.state;
-
-    return gameData.map((rowData, i) => (
-      <div className="row" key={i}>
-        {rowData.map((boxData, boxIndex) => (
-          <div
-            role="button"
-            className="box"
-            key={boxIndex}
-            onClick={() => this.onClick({ row: i, box: boxIndex })}
-          >
-            {boxData}
-          </div>
-        ))}
-      </div>
-    ));
-  };
-
   resetState = () => {
     this.setState({
       gameData: initial(),
@@ -81,14 +62,13 @@ class App extends React.Component {
   };
 
   render() {
-    const { turn } = this.state;
-
+    const { turn, gameData } = this.state;
     const winner = this.findWinner();
-    const s = NaN;
+
     return winner || endgame < turn ? (
-      <Winner winner={winner} onclick={this.resetState} nr={s} />
+      <Winner winner={winner} onclick={this.resetState} />
     ) : (
-      this.renderGame()
+      <Game data={gameData} onclick={this.onClick} />
     );
   }
 }
