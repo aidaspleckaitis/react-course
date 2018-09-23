@@ -1,38 +1,49 @@
+// Application
 body {
-  font-family: 'Robot'; }
-
+  font-family: 'Robot';
+}
 a {
-  text-decoration: none; }
+  text-decoration: none;
+}
 
+// Navigation Bar
 .Navigation-link {
-  color: white; }
-
+  color: white;
+}
 .Title-wrapper {
-  width: 100%; }
-  .Title-wrapper h2 {
-    text-align: right; }
+  width: 100%;
 
+  h2 {
+    text-align: right;
+  }
+}
 .App-icon {
   width: 50px;
-  padding-left: 20px; }
+  padding-left: 20px;
+}
 
+// Home
 .Home-container-title {
   color: limegreen;
   font-size: 30px;
   font-weight: 900;
-  margin: 30px 0 20px 2.5%; }
+  margin: 30px 0 20px 2.5%;
+}
+
+// Dishes
 
 .Card {
   width: 400px;
   height: 320px;
-  margin: 20px; }
-
+  margin: 20px;
+}
 .Card-header span {
   font-size: 20px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  width: 180px; }
-
+  width: 180px;
+}
 .Card-image {
-  height: 150px; }
+  height: 150px;
+}

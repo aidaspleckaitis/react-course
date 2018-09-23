@@ -1,8 +1,11 @@
 import React from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+
 import Home from './pages/Home';
 import Favorites from './pages/Favorites';
 import Checkout from './pages/Checkout';
 import PageNotFound from './pages/PageNotFound';
+import NavigationBar from './appBar/appBar';
 
 const DEFAULT_ERROR = 'Failed to fetch data.';
 const ENDPOINT =
@@ -22,29 +25,46 @@ class App extends React.Component {
   componentDidMount() {
     fetch(ENDPOINT)
       .then(response => response.json())
-      .then(data => this.setState({ data }))
+      .then(data => {
+        const dishes = this.dishDescriptionClipper(data);
+
+        this.setState({ data: dishes });
+      })
       .catch(() => this.setState({ error: DEFAULT_ERROR }));
   }
 
+  dishDescriptionClipper = data => {
+    const maxLength = 120;
+    const ending = '...';
+    const dishes = data;
+
+    dishes.forEach((dish, index) => {
+      const dishDescription = dish.description;
+
+      if (dishDescription.length > maxLength) {
+        dishes[index].description =
+          dishDescription.substring(0, maxLength - ending.length) + ending;
+      }
+    });
+    return dishes;
+  };
+
   render() {
     const { route, data, error } = this.state;
-    console.log('TCL: App -> render -> data', data);
+    console.log('data: ', data);
 
-    if (error) {
-      return <h1>{error}</h1>;
-    }
+    return (
+      <Router>
+        <div>
+          <NavigationBar />
 
-    switch (route) {
-      case 'home':
-        return <Home />;
-      case 'favorites':
-        return <Favorites />;
-      case 'checkout':
-        return <Checkout />;
-
-      default:
-        return <PageNotFound />;
-    }
+          <Route exact path="/" render={() => <Home data={data} />} />
+          <Route path="/favorites" component={Favorites} />
+          <Route path="/checkout" component={Checkout} />
+          <Route path="/error" component={PageNotFound} />
+        </div>
+      </Router>
+    );
   }
 }
 
