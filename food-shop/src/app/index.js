@@ -8,8 +8,8 @@ import PageNotFound from './pages/PageNotFound';
 import NavigationBar from './appBar/appBar';
 
 const DEFAULT_ERROR = 'Failed to fetch data.';
-const ENDPOINT =
-  'https://boiling-reaches-93648.herokuapp.com/food-shop/products';
+const API_KEY = '5e788b7fd657d76b78aade1b81481c6b';
+const ENDPOINT = `https://www.food2fork.com/api/search?key=${API_KEY}&q=sushi`;
 
 class App extends React.Component {
   constructor(props) {
@@ -23,41 +23,46 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    fetch(ENDPOINT)
-      .then(response => response.json())
-      .then(data => {
-        const dishes = this.dishDescriptionClipper(data);
+    let sushiMeals = JSON.parse(localStorage.getItem('data'));
 
-        this.setState({ data: dishes });
-      })
-      .catch(() => this.setState({ error: DEFAULT_ERROR }));
+    if (!sushiMeals) {
+      fetch(ENDPOINT)
+        .then(response => response.json())
+        .then(data => {
+          localStorage.setItem('data', JSON.stringify(data.recipes));
+          this.setState({ data: data.recipes });
+        })
+        .catch(() => this.setState({ error: DEFAULT_ERROR }));
+    } else {
+      console.log('recipes: ', sushiMeals);
+      sushiMeals = this.dishPriceSetter(sushiMeals);
+      this.setState({ data: sushiMeals });
+    }
   }
 
-  dishDescriptionClipper = data => {
-    const maxLength = 120;
-    const ending = '...';
-    const dishes = data;
+  dishPriceSetter = data => {
+    const meals = data;
 
-    dishes.forEach((dish, index) => {
-      const dishDescription = dish.description;
+    meals.forEach((meal, index) => {
+      const mealID = meal.recipe_id;
 
-      if (dishDescription.length > maxLength) {
-        dishes[index].description =
-          dishDescription.substring(0, maxLength - ending.length) + ending;
+      if (isNaN(mealID)) {
+        meals[index].recipe_id = '100.00';
+      } else {
+        meals[index].recipe_id = mealID / 100;
       }
     });
-    return dishes;
+
+    return meals;
   };
 
   render() {
     const { route, data, error } = this.state;
-    console.log('data: ', data);
 
     return (
       <Router>
         <div>
           <NavigationBar />
-
           <Route exact path="/" render={() => <Home data={data} />} />
           <Route path="/favorites" component={Favorites} />
           <Route path="/checkout" component={Checkout} />

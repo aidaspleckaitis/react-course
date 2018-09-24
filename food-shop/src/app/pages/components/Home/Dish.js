@@ -7,21 +7,33 @@ import CardContent from '@material-ui/core/CardContent';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import FavoriteIcon from '@material-ui/icons/Favorite';
+import CardActions from '@material-ui/core/CardActions';
 
 function Dish(props) {
   const { dish } = props;
-  console.log('data: ', dish.image);
   return (
     <Card className="Card">
-      <CardHeader className="Card-header" title={dish.name} />
+      <CardHeader
+        style={{ fontWeight: 900 }}
+        className="Card-header"
+        title={dish.title}
+      />
       <CardMedia
         className="Card-image"
-        image={dish.image}
+        image={dish.image_url}
         title="Image title"
       />
-      <CardContent>
-        <Typography>{dish.description}</Typography>
-      </CardContent>
+      <div className="Card-action-container">
+        <CardActions
+          style={{ display: 'flex', justifyContent: 'space-between' }}
+          disableActionSpacing
+        >
+          <IconButton aria-label="Add to favorites">
+            <FavoriteIcon />
+          </IconButton>
+          <div className="Card-price">€ {dish.recipe_id}</div>
+        </CardActions>
+      </div>
     </Card>
   );
 }

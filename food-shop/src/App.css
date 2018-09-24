@@ -1,5 +1,5 @@
-body {
-  font-family: 'Robot'; }
+html {
+  font-family: 'Shojumaru', cursive; }
 
 a {
   text-decoration: none; }
@@ -23,16 +23,24 @@ a {
   margin: 30px 0 20px 2.5%; }
 
 .Card {
-  width: 400px;
-  height: 320px;
+  width: 300px;
+  height: 300px;
   margin: 20px; }
 
 .Card-header span {
+  color: orangered;
   font-size: 20px;
+  font-weight: 900;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  width: 180px; }
+  width: 230px; }
 
 .Card-image {
   height: 150px; }
+
+.Card-action-container {
+  padding-top: 6%; }
+
+.Card-price {
+  font-size: 25px; }
