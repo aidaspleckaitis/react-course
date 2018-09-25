@@ -7,7 +7,12 @@ import CardContent from '@material-ui/core/CardContent';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import FavoriteIcon from '@material-ui/icons/Favorite';
+import ShoppingBasket from '@material-ui/icons/ShoppingBasket';
 import CardActions from '@material-ui/core/CardActions';
+
+const addToFavorites = e => {
+  console.log('item: ', e);
+};
 
 function Dish(props) {
   const { dish } = props;
@@ -23,15 +28,21 @@ function Dish(props) {
         image={dish.image_url}
         title="Image title"
       />
+      <div className="Card-price">€ {dish.recipe_id}</div>
       <div className="Card-action-container">
         <CardActions
-          style={{ display: 'flex', justifyContent: 'space-between' }}
+          style={{ display: 'flex', justifyContent: 'flex-end' }}
           disableActionSpacing
         >
           <IconButton aria-label="Add to favorites">
-            <FavoriteIcon />
+            <FavoriteIcon
+              className="Favorite-icon"
+              onClick={() => addToFavorites(dish)}
+            />
           </IconButton>
-          <div className="Card-price">€ {dish.recipe_id}</div>
+          <IconButton aria-label="Add to favorites">
+            <ShoppingBasket />
+          </IconButton>
         </CardActions>
       </div>
     </Card>

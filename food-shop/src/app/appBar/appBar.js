@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 // Material UI
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -55,7 +56,7 @@ function NavigationBar(props) {
             color="inherit"
             classes={{ root: classes.font }}
           >
-            Greatest sushi's ever
+            Greatest sushi&#39;s ever
           </Typography>
         </div>
         <img className="App-icon" src={APP_ICON} alt="App icon" />
@@ -63,5 +64,13 @@ function NavigationBar(props) {
     </AppBar>
   );
 }
+
+NavigationBar.propTypes = {
+  classes: PropTypes.objectOf(PropTypes.string),
+};
+
+NavigationBar.defaultProps = {
+  classes: undefined,
+};
 
 export default withStyles(styles)(NavigationBar);
