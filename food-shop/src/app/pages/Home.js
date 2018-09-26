@@ -8,20 +8,28 @@ import Grid from '@material-ui/core/Grid';
 // Components
 import Dish from './components/Home/Dish';
 
-function Home(props) {
-  const { data } = props;
-  console.log('asdasd: ', data);
+class Home extends React.Component {
+  constructor(props) {
+    super(props);
 
-  return (
-    <Grid container justify="center">
-      <Grid item xs={12}>
-        <h3 className="Home-container-title">CHOOSE YOUR NINJA MEAL:</h3>
+    this.state = {
+      data: props.data,
+    };
+  }
+
+  render() {
+    const { data } = this.state;
+    return (
+      <Grid container justify="center">
+        <Grid item xs={12}>
+          <h3 className="Home-container-title">Choose your ninja meal</h3>
+        </Grid>
+        {data.map((dish, index) => (
+          <Dish key={index} dish={dish} />
+        ))}
       </Grid>
-      {data.map((dish, index) => (
-        <Dish key={index} dish={dish} />
-      ))}
-    </Grid>
-  );
+    );
+  }
 }
 
 Home.propTypes = {

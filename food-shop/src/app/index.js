@@ -59,17 +59,20 @@ class App extends React.Component {
   render() {
     const { route, data, error } = this.state;
 
-    return (
-      <Router>
-        <div>
-          <NavigationBar />
-          <Route exact path="/" render={() => <Home data={data} />} />
-          <Route path="/favorites" component={Favorites} />
-          <Route path="/checkout" component={Checkout} />
-          <Route path="/error" component={PageNotFound} />
-        </div>
-      </Router>
-    );
+    if (data.length > 0) {
+      return (
+        <Router>
+          <div>
+            <NavigationBar />
+            <Route exact path="/" render={() => <Home data={data} />} />
+            <Route path="/favorites" component={Favorites} />
+            <Route path="/checkout" component={Checkout} />
+            <Route path="/error" component={PageNotFound} />
+          </div>
+        </Router>
+      );
+    }
+    return <div />;
   }
 }
 

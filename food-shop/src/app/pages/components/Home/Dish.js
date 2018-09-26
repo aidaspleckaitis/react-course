@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 // Material UI
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -26,7 +27,7 @@ function Dish(props) {
       <CardMedia
         className="Card-image"
         image={dish.image_url}
-        title="Image title"
+        title={dish.title}
       />
       <div className="Card-price">€ {dish.recipe_id}</div>
       <div className="Card-action-container">
@@ -48,5 +49,11 @@ function Dish(props) {
     </Card>
   );
 }
+
+Dish.propTypes = {
+  dish: PropTypes.objectOf(
+    PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  ).isRequired,
+};
 
 export default Dish;
