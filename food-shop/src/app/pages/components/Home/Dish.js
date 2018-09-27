@@ -11,12 +11,8 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShoppingBasket from '@material-ui/icons/ShoppingBasket';
 import CardActions from '@material-ui/core/CardActions';
 
-const addToFavorites = e => {
-  console.log('item: ', e);
-};
-
 function Dish(props) {
-  const { dish } = props;
+  const { dish, addToFavorites } = props;
   return (
     <Card className="Card">
       <CardHeader
@@ -54,6 +50,11 @@ Dish.propTypes = {
   dish: PropTypes.objectOf(
     PropTypes.oneOfType([PropTypes.string, PropTypes.number])
   ).isRequired,
+  addToFavorites: PropTypes.func,
+};
+
+Dish.defaultProps = {
+  addToFavorites: undefined,
 };
 
 export default Dish;

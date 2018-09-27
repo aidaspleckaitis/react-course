@@ -34,7 +34,6 @@ class App extends React.Component {
         })
         .catch(() => this.setState({ error: DEFAULT_ERROR }));
     } else {
-      console.log('recipes: ', sushiMeals);
       sushiMeals = this.dishPriceSetter(sushiMeals);
       this.setState({ data: sushiMeals });
     }
@@ -57,7 +56,7 @@ class App extends React.Component {
   };
 
   render() {
-    const { route, data, error } = this.state;
+    const { data } = this.state;
 
     if (data.length > 0) {
       return (
@@ -72,7 +71,7 @@ class App extends React.Component {
         </Router>
       );
     }
-    return <div />;
+    return <PageNotFound />;
   }
 }
 
