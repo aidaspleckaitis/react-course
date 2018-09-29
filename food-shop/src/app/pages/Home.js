@@ -6,51 +6,75 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 
 // Components
-import Dish from './components/Home/Dish';
+import Dish from './components/Dish';
 
 class Home extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      data: props.data,
+      data: JSON.parse(localStorage.getItem('data')),
       favoriteDishes: [],
     };
   }
 
-  addToFavorites = e => {
-    console.log('item: ', e);
+  updateFavoriteMealsLocalReference = reference => {
+    localStorage.setItem('favoriteMeals', JSON.stringify(reference));
+  };
 
-    const { favoriteDishes } = this.state;
-    const favoriteMealsLocalReference = JSON.parse(
-      localStorage.getItem('favoriteMeals')
+  updateMealCollection = data => {
+    localStorage.setItem('data', JSON.stringify(data));
+  };
+
+  addToFavorites = e => {
+    const { favoriteDishes, data } = this.state;
+
+    const interacteWithMeal = e;
+    const mealCollection = data;
+    const favoriteMealsLocalReference =
+      JSON.parse(localStorage.getItem('favoriteMeals')) || [];
+
+    // Check if meal already exists in local favorite meals reference
+    const isAlreadyFavorite = favoriteMealsLocalReference.find(
+      (currentValue, index) => {
+        if (currentValue.title === interacteWithMeal.title) {
+          favoriteMealsLocalReference.splice(index, 1); // Remove from favorites
+          mealCollection[interacteWithMeal.id].favorite = false; // Unfavorite meal in main collection data
+
+          // Update local reference
+          this.updateFavoriteMealsLocalReference(favoriteMealsLocalReference);
+          this.updateMealCollection(mealCollection);
+
+          // Update state
+          this.setState({
+            favoriteDishes: favoriteMealsLocalReference,
+            data: mealCollection,
+          });
+
+          return true;
+        }
+
+        return false;
+      }
     );
 
-    console.log('favorite_dishes: ', favoriteDishes);
+    /** Push meal to local reference if it doesn't exist already
+     * Update main meals data */
+    if (!isAlreadyFavorite) {
+      interacteWithMeal.favorite = true; // Mark interacted meal as favorite
+      mealCollection[interacteWithMeal.id].favorite = true; // Mark meal in main collection as favorite
 
-    /** Add meal to local favorite meals reference
-     * Else create local reference if one is not present */
-    if (favoriteMealsLocalReference) {
-      // Check if meal already exists in local favorite meals reference
-      const isAlreadyFavorite = favoriteMealsLocalReference.find(
-        i => i.title === e.title
-      );
+      favoriteMealsLocalReference.push(interacteWithMeal);
 
-      // Push meal to local reference if it doesn't exist already
-      if (!isAlreadyFavorite) {
-        this.setState({ favoriteDishes: [...favoriteDishes, e] });
+      // Update local references
+      this.updateFavoriteMealsLocalReference(favoriteMealsLocalReference);
+      this.updateMealCollection(mealCollection);
 
-        favoriteMealsLocalReference.push(e);
-
-        localStorage.setItem(
-          'favoriteMeals',
-          JSON.stringify(favoriteMealsLocalReference)
-        );
-      }
-    } else {
-      this.setState({ favoriteDishes: [...favoriteDishes, e] });
-
-      localStorage.setItem('favoriteMeals', JSON.stringify([e]));
+      // Update state
+      this.setState({
+        favoriteDishes: favoriteMealsLocalReference,
+        data: mealCollection,
+      });
     }
   };
 

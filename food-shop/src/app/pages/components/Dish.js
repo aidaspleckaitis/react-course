@@ -12,7 +12,7 @@ import ShoppingBasket from '@material-ui/icons/ShoppingBasket';
 import CardActions from '@material-ui/core/CardActions';
 
 function Dish(props) {
-  const { dish, addToFavorites } = props;
+  const { dish, addToFavorites, removeFromFavorites } = props;
   return (
     <Card className="Card">
       <CardHeader
@@ -34,7 +34,12 @@ function Dish(props) {
           <IconButton aria-label="Add to favorites">
             <FavoriteIcon
               className="Favorite-icon"
-              onClick={() => addToFavorites(dish)}
+              style={dish.favorite ? { fill: 'hotpink' } : null}
+              onClick={() =>
+                addToFavorites
+                  ? addToFavorites(dish)
+                  : removeFromFavorites(dish)
+              }
             />
           </IconButton>
           <IconButton aria-label="Add to favorites">
@@ -48,7 +53,7 @@ function Dish(props) {
 
 Dish.propTypes = {
   dish: PropTypes.objectOf(
-    PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool])
   ).isRequired,
   addToFavorites: PropTypes.func,
 };

@@ -23,18 +23,20 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    let sushiMeals = JSON.parse(localStorage.getItem('data'));
+    const sushiMeals = JSON.parse(localStorage.getItem('data'));
+    console.log('sushiMeals: ', sushiMeals);
 
     if (!sushiMeals) {
       fetch(ENDPOINT)
         .then(response => response.json())
         .then(data => {
-          localStorage.setItem('data', JSON.stringify(data.recipes));
-          this.setState({ data: data.recipes });
+          const sushis = this.dishPriceSetter(data.recipes);
+
+          localStorage.setItem('data', JSON.stringify(sushis));
+          this.setState({ data: sushis });
         })
         .catch(() => this.setState({ error: DEFAULT_ERROR }));
     } else {
-      sushiMeals = this.dishPriceSetter(sushiMeals);
       this.setState({ data: sushiMeals });
     }
   }
@@ -44,6 +46,9 @@ class App extends React.Component {
 
     meals.forEach((meal, index) => {
       const mealID = meal.recipe_id;
+
+      meals[index].favorite = false;
+      meals[index].id = index;
 
       if (isNaN(mealID)) {
         meals[index].recipe_id = '100.00';
