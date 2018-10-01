@@ -49,3 +49,40 @@ a {
 
 .Favorite-icon {
   fill: yellowgreen; }
+
+.Checkout-container {
+  margin-top: 2%;
+  width: 70%;
+  margin-left: 10%; }
+  .Checkout-container h2 {
+    margin-bottom: 5%; }
+
+.Checkout-list-container {
+  background: lightgrey;
+  border-radius: 3px;
+  width: 70%; }
+  .Checkout-list-container section {
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 3%;
+    padding-bottom: 1%;
+    width: 85%; }
+
+.Checkout-cart-container {
+  display: flex;
+  justify-content: left; }
+
+.Checkout-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1%;
+  align-items: center; }
+
+.Checkout-item-title {
+  padding-right: 20px; }
+
+.Checkout-right-snippet {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 30%; }

@@ -13,8 +13,32 @@ class Favorites extends React.Component {
     };
   }
 
+  updateMainData = selectedMeal => {
+    const data = JSON.parse(localStorage.getItem('data'));
+    data[selectedMeal.id].favorite = false;
+    localStorage.setItem('data', JSON.stringify(data));
+  };
+
   removeFromFavorites = e => {
-    console.log('e:', e);
+    const { favoriteDishes } = this.state;
+    const mealToRemove = e;
+
+    // Remove selected meal from favorites
+    const newFavoriteMealsArray = favoriteDishes.filter(
+      meal => meal.id !== mealToRemove.id
+    );
+
+    // Remove selected meal from main data and update local reference
+    this.updateMainData(mealToRemove);
+
+    // Update local favorite meals reference
+    localStorage.setItem(
+      'favoriteMeals',
+      JSON.stringify(newFavoriteMealsArray)
+    );
+
+    // Update State
+    this.setState({ favoriteDishes: newFavoriteMealsArray });
   };
 
   render() {
@@ -28,7 +52,7 @@ class Favorites extends React.Component {
           <Dish
             key={index}
             dish={dish}
-            addToFavorites={e => this.removeFromFavorites(e)}
+            removeFromFavorites={e => this.removeFromFavorites(e)}
           />
         ))}
       </Grid>

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import Home from './pages/Home';
@@ -18,6 +19,7 @@ class App extends React.Component {
     this.state = {
       route: 'home',
       data: [],
+      cart: [],
       error: undefined,
     };
   }
@@ -51,26 +53,68 @@ class App extends React.Component {
       meals[index].id = index;
 
       if (isNaN(mealID)) {
-        meals[index].recipe_id = '100.00';
+        meals[index].recipe_id = 100;
       } else {
-        meals[index].recipe_id = mealID / 100;
+        meals[index].recipe_id = (mealID / 100).toFixed(2);
       }
     });
 
     return meals;
   };
 
+  updateCartState = (meal, newCart) => {
+    const { cart } = this.state;
+
+    // Add meal to state
+    if (meal) {
+      const nextCart = cart;
+
+      // Check if meal exists in cart
+      if (nextCart.filter(i => i.id === meal.id).length > 0) {
+        // Update meals count
+        cart.forEach((item, index) => {
+          if (item.id === meal.id) {
+            if (nextCart[index].count) {
+              nextCart[index].count += 1;
+            } else {
+              nextCart[index].count = 1;
+            }
+          }
+        });
+        // Update cart
+        this.setState({ cart: nextCart });
+      } else {
+        // Add new meal to state
+        this.setState({ cart: [...cart, meal] });
+      }
+    }
+
+    // Set new cart in state with removed meal
+    if (newCart) this.setState({ cart: newCart });
+  };
+
   render() {
-    const { data } = this.state;
+    const { data, cart } = this.state;
 
     if (data.length > 0) {
       return (
         <Router>
           <div>
             <NavigationBar />
-            <Route exact path="/" render={() => <Home data={data} />} />
+            <Route
+              exact
+              path="/"
+              render={() => (
+                <Home data={data} updateCartState={this.updateCartState} />
+              )}
+            />
             <Route path="/favorites" component={Favorites} />
-            <Route path="/checkout" component={Checkout} />
+            <Route
+              path="/checkout"
+              render={() => (
+                <Checkout cart={cart} updateCartState={this.updateCartState} />
+              )}
+            />
             <Route path="/error" component={PageNotFound} />
           </div>
         </Router>

@@ -15,6 +15,7 @@ class Home extends React.Component {
     this.state = {
       data: JSON.parse(localStorage.getItem('data')),
       favoriteDishes: [],
+      cart: [],
     };
   }
 
@@ -29,7 +30,7 @@ class Home extends React.Component {
   addToFavorites = e => {
     const { favoriteDishes, data } = this.state;
 
-    const interacteWithMeal = e;
+    const interactedWithMeal = e;
     const mealCollection = data;
     const favoriteMealsLocalReference =
       JSON.parse(localStorage.getItem('favoriteMeals')) || [];
@@ -37,9 +38,9 @@ class Home extends React.Component {
     // Check if meal already exists in local favorite meals reference
     const isAlreadyFavorite = favoriteMealsLocalReference.find(
       (currentValue, index) => {
-        if (currentValue.title === interacteWithMeal.title) {
+        if (currentValue.title === interactedWithMeal.title) {
           favoriteMealsLocalReference.splice(index, 1); // Remove from favorites
-          mealCollection[interacteWithMeal.id].favorite = false; // Unfavorite meal in main collection data
+          mealCollection[interactedWithMeal.id].favorite = false; // Unfavorite meal in main collection data
 
           // Update local reference
           this.updateFavoriteMealsLocalReference(favoriteMealsLocalReference);
@@ -61,10 +62,10 @@ class Home extends React.Component {
     /** Push meal to local reference if it doesn't exist already
      * Update main meals data */
     if (!isAlreadyFavorite) {
-      interacteWithMeal.favorite = true; // Mark interacted meal as favorite
-      mealCollection[interacteWithMeal.id].favorite = true; // Mark meal in main collection as favorite
+      interactedWithMeal.favorite = true; // Mark interacted meal as favorite
+      mealCollection[interactedWithMeal.id].favorite = true; // Mark meal in main collection as favorite
 
-      favoriteMealsLocalReference.push(interacteWithMeal);
+      favoriteMealsLocalReference.push(interactedWithMeal);
 
       // Update local references
       this.updateFavoriteMealsLocalReference(favoriteMealsLocalReference);
@@ -76,6 +77,12 @@ class Home extends React.Component {
         data: mealCollection,
       });
     }
+  };
+
+  // Add meal to cart
+  addToCart = meal => {
+    const { updateCartState } = this.props;
+    updateCartState(meal);
   };
 
   render() {
@@ -90,6 +97,7 @@ class Home extends React.Component {
             key={index}
             dish={dish}
             addToFavorites={e => this.addToFavorites(e)}
+            addToCart={e => this.addToCart(e)}
           />
         ))}
       </Grid>
@@ -99,6 +107,7 @@ class Home extends React.Component {
 
 Home.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  updateCartState: PropTypes.func.isRequired,
 };
 
 export default Home;

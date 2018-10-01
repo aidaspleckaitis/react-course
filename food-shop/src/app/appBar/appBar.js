@@ -22,6 +22,7 @@ const styles = () => ({
   },
   button: {
     fontFamily: 'Shojumaru',
+    color: 'white',
     marginRight: '40px',
     '&:hover': {
       backgroundColor: 'orangered',
@@ -35,21 +36,24 @@ function NavigationBar(props) {
   return (
     <AppBar position="static" classes={{ root: classes.appBar }}>
       <Toolbar>
-        <Button classes={{ root: classes.button }} size="large">
-          <Link className="Navigation-link" to="/">
+        <Link className="Navigation-link" to="/">
+          <Button classes={{ root: classes.button }} size="large">
             Home
-          </Link>
-        </Button>
-        <Button classes={{ root: classes.button }} size="large">
-          <Link className="Navigation-link" to="/favorites">
+          </Button>
+        </Link>
+
+        <Link className="Navigation-link" to="/favorites">
+          <Button classes={{ root: classes.button }} size="large">
             Favorites
-          </Link>
-        </Button>
-        <Button classes={{ root: classes.button }} size="large">
-          <Link className="Navigation-link" to="/checkout">
+          </Button>
+        </Link>
+
+        <Link className="Navigation-link" to="/checkout">
+          <Button classes={{ root: classes.button }} size="large">
             Checkout
-          </Link>
-        </Button>
+          </Button>
+        </Link>
+
         <div className="Title-wrapper">
           <Typography
             variant="title"

@@ -10,9 +10,10 @@ import Typography from '@material-ui/core/Typography';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShoppingBasket from '@material-ui/icons/ShoppingBasket';
 import CardActions from '@material-ui/core/CardActions';
+import Button from '@material-ui/core/Button';
 
 function Dish(props) {
-  const { dish, addToFavorites, removeFromFavorites } = props;
+  const { dish, addToFavorites, removeFromFavorites, addToCart } = props;
   return (
     <Card className="Card">
       <CardHeader
@@ -31,18 +32,23 @@ function Dish(props) {
           style={{ display: 'flex', justifyContent: 'flex-end' }}
           disableActionSpacing
         >
-          <IconButton aria-label="Add to favorites">
-            <FavoriteIcon
-              className="Favorite-icon"
-              style={dish.favorite ? { fill: 'hotpink' } : null}
-              onClick={() =>
-                addToFavorites
-                  ? addToFavorites(dish)
-                  : removeFromFavorites(dish)
-              }
-            />
-          </IconButton>
-          <IconButton aria-label="Add to favorites">
+          {addToFavorites ? (
+            <IconButton
+              aria-label="Add to favorites"
+              onClick={() => addToFavorites(dish)}
+            >
+              <FavoriteIcon
+                className="Favorite-icon"
+                style={dish.favorite ? { fill: 'hotpink' } : null}
+              />
+            </IconButton>
+          ) : (
+            <Button onClick={() => removeFromFavorites(dish)}>Remove</Button>
+          )}
+          <IconButton
+            aria-label="Add to favorites"
+            onClick={() => addToCart(dish)}
+          >
             <ShoppingBasket />
           </IconButton>
         </CardActions>
@@ -56,10 +62,13 @@ Dish.propTypes = {
     PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool])
   ).isRequired,
   addToFavorites: PropTypes.func,
+  removeFromFavorites: PropTypes.func,
+  addToCart: PropTypes.func.isRequired,
 };
 
 Dish.defaultProps = {
   addToFavorites: undefined,
+  removeFromFavorites: undefined,
 };
 
 export default Dish;
