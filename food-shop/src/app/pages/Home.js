@@ -11,12 +11,16 @@ import Dish from './components/Dish';
 class Home extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      data: JSON.parse(localStorage.getItem('data')),
+      data: props.data,
       favoriteDishes: [],
-      cart: [],
     };
+  }
+
+  // Update props because data param is collected from props which doesn't re-render. ANTI-PATERN
+  componentWillReceiveProps(nextProps) {
+    console.log('nextProps: ', nextProps);
+    this.setState({ data: nextProps.data });
   }
 
   updateFavoriteMealsLocalReference = reference => {
@@ -28,6 +32,7 @@ class Home extends React.Component {
   };
 
   addToFavorites = e => {
+    const { updateDataStateOnRemoveFromCheckout } = this.props;
     const { favoriteDishes, data } = this.state;
 
     const interactedWithMeal = e;
@@ -44,12 +49,13 @@ class Home extends React.Component {
 
           // Update local reference
           this.updateFavoriteMealsLocalReference(favoriteMealsLocalReference);
-          this.updateMealCollection(mealCollection);
+
+          // Update parent state's data
+          updateDataStateOnRemoveFromCheckout(mealCollection);
 
           // Update state
           this.setState({
             favoriteDishes: favoriteMealsLocalReference,
-            data: mealCollection,
           });
 
           return true;
@@ -69,24 +75,27 @@ class Home extends React.Component {
 
       // Update local references
       this.updateFavoriteMealsLocalReference(favoriteMealsLocalReference);
-      this.updateMealCollection(mealCollection);
+      updateDataStateOnRemoveFromCheckout(mealCollection);
 
       // Update state
       this.setState({
         favoriteDishes: favoriteMealsLocalReference,
-        data: mealCollection,
       });
     }
   };
 
   // Add meal to cart
   addToCart = meal => {
-    const { updateCartState } = this.props;
-    updateCartState(meal);
+    const { updateCartState, updateFavoriteMeals } = this.props;
+    const mealToAddToCart = meal;
+
+    updateFavoriteMeals(mealToAddToCart.id);
+    updateCartState(mealToAddToCart);
   };
 
   render() {
     const { data } = this.state;
+
     return (
       <Grid container justify="center">
         <Grid item xs={12}>

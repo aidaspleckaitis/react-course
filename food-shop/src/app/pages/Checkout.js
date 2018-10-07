@@ -17,35 +17,62 @@ class Checkout extends React.Component {
 
   componentDidMount() {
     const { cart } = this.state;
-    console.log('cart: ', cart);
+
     this.calculatePrice(cart);
   }
 
   // Handles price calculations
   calculatePrice = cart => {
     const { cartValue } = this.state;
-    let fullPrice = cartValue;
+    let fullPrice = Number(cartValue);
 
     cart.forEach(cartItem => {
-      fullPrice += Number(cartItem.recipe_id);
+      fullPrice += Number(cartItem.recipe_id * cartItem.count);
     });
 
     this.setState({ cartValue: fullPrice.toFixed(2) });
   };
 
+  // Recalculates cart value when meal is removed
+  recalculateCartValue = removedMealPrice => {
+    const { cartValue } = this.state;
+
+    const newCartValue = (cartValue - removedMealPrice).toFixed(2);
+
+    this.setState({ cartValue: newCartValue });
+  };
+
+  updateFavoriteMealsCartData = () => {};
+
   // Handles cart updates
-  updateCart = mealID => {
+  updateCart = (mealID, removedMealPrice) => {
     const { cart } = this.state;
-    const { updateCartState } = this.props;
+    const {
+      updateCartState,
+      updateDataStateOnRemoveFromCheckout,
+      updateFavoriteMeals,
+    } = this.props;
+    const dishID = mealID;
 
     // Remove selected meal from cart
-    const newCart = cart.filter(meal => meal.id !== mealID);
+    const newCart = cart.filter(meal => meal.id !== dishID);
+
+    localStorage.setItem('cart', JSON.stringify(newCart));
+
+    // Update parent state's mainData
+    updateDataStateOnRemoveFromCheckout(null, dishID);
+
+    // Update parent state's cart
+    updateCartState(null, newCart);
 
     // Update common state's cart
     this.setState({ cart: newCart });
 
-    // Update parent state's cart
-    updateCartState(null, newCart);
+    // Update cart value when meal is removed
+    this.recalculateCartValue(removedMealPrice);
+
+    // Update favorites data
+    updateFavoriteMeals(dishID, true);
   };
 
   render() {
@@ -86,9 +113,11 @@ Checkout.propTypes = {
       PropTypes.number,
       PropTypes.bool,
       PropTypes.array,
+      PropTypes.object,
     ])
   ),
   updateCartState: PropTypes.func.isRequired,
+  updateDataStateOnRemoveFromCheckout: PropTypes.func.isRequired,
 };
 
 Checkout.defaultProps = {

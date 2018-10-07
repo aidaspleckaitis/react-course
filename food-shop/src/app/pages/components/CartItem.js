@@ -20,8 +20,10 @@ function CartItem(props) {
       </div>
 
       <div className="Checkout-right-snippet">
-        <div>{dish.recipe_id}</div>
-        <CancelIcon onClick={() => updateCart(dish.id)} />
+        <div>{dish.recipe_id * dish.count}</div>
+        <CancelIcon
+          onClick={() => updateCart(dish.id, dish.recipe_id * dish.count)}
+        />
       </div>
     </li>
   );

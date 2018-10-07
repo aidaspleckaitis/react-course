@@ -49,8 +49,9 @@ function Dish(props) {
             aria-label="Add to favorites"
             onClick={() => addToCart(dish)}
           >
-            <ShoppingBasket />
+            <ShoppingBasket style={dish.count ? { fill: 'red' } : null} />
           </IconButton>
+          {dish.count > 0 ? dish.count : null}
         </CardActions>
       </div>
     </Card>

@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTyoes from 'prop-types';
+import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 
 import Dish from './components/Dish';
@@ -9,19 +9,42 @@ class Favorites extends React.Component {
     super(props);
 
     this.state = {
-      favoriteDishes: JSON.parse(localStorage.getItem('favoriteMeals')),
+      favoriteDishes: JSON.parse(localStorage.getItem('favoriteMeals')) || [],
     };
   }
 
-  updateMainData = selectedMeal => {
-    const data = JSON.parse(localStorage.getItem('data'));
-    data[selectedMeal.id].favorite = false;
-    localStorage.setItem('data', JSON.stringify(data));
+  updateCart = meal => {
+    const { updateCartState } = this.props;
+    const { favoriteDishes } = this.state;
+    const mealToAddToCart = meal;
+
+    favoriteDishes.forEach((item, index) => {
+      if (item.id === mealToAddToCart.id) {
+        favoriteDishes[index].count += 1;
+        this.setState({ favoriteDishes });
+        localStorage.setItem('favoriteMeals', JSON.stringify(favoriteDishes));
+      }
+    });
+
+    updateCartState(mealToAddToCart);
   };
 
-  removeFromFavorites = e => {
+  updateMainData = selectedMeal => {
+    const { updateDataStateOnRemoveFromFavorites } = this.props;
+
+    const data = JSON.parse(localStorage.getItem('data'));
+
+    data[selectedMeal.id].favorite = false;
+
+    localStorage.setItem('data', JSON.stringify(data));
+
+    // Update parent state data
+    updateDataStateOnRemoveFromFavorites(data);
+  };
+
+  removeFromFavorites = mealToBeRemoved => {
     const { favoriteDishes } = this.state;
-    const mealToRemove = e;
+    const mealToRemove = mealToBeRemoved;
 
     // Remove selected meal from favorites
     const newFavoriteMealsArray = favoriteDishes.filter(
@@ -43,6 +66,7 @@ class Favorites extends React.Component {
 
   render() {
     const { favoriteDishes } = this.state;
+
     return (
       <Grid container justify="center">
         <Grid item xs={12}>
@@ -52,12 +76,17 @@ class Favorites extends React.Component {
           <Dish
             key={index}
             dish={dish}
-            removeFromFavorites={e => this.removeFromFavorites(e)}
+            removeFromFavorites={meal => this.removeFromFavorites(meal)}
+            addToCart={meal => this.updateCart(meal)}
           />
         ))}
       </Grid>
     );
   }
 }
+
+Favorites.propTypes = {
+  updateCartState: PropTypes.func.isRequired,
+};
 
 export default Favorites;
