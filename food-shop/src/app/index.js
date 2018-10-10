@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import Home from './pages/Home';
@@ -8,7 +7,6 @@ import Checkout from './pages/Checkout';
 import PageNotFound from './pages/PageNotFound';
 import NavigationBar from './appBar/appBar';
 
-const DEFAULT_ERROR = 'Failed to fetch data.';
 const API_KEY = '5e788b7fd657d76b78aade1b81481c6b';
 const ENDPOINT = `https://www.food2fork.com/api/search?key=${API_KEY}&q=sushi`;
 
@@ -19,7 +17,6 @@ class App extends React.Component {
     this.state = {
       data: [],
       cart: [],
-      error: undefined,
     };
   }
 
@@ -38,7 +35,7 @@ class App extends React.Component {
 
           this.setState({ data: sushis, cart: localCart });
         })
-        .catch(() => this.setState({ error: DEFAULT_ERROR }));
+        .catch(() => alert('Error while fetching data.'));
     } else {
       this.setState({ data: sushiMeals, cart: localCart });
     }
@@ -168,57 +165,56 @@ class App extends React.Component {
   render() {
     const { data, cart } = this.state;
 
-    if (data.length > 0) {
-      return (
-        <Router>
-          <div>
-            <NavigationBar />
-            <Route
-              exact
-              path="/"
-              render={() => (
-                <Home
-                  data={data}
-                  cart={cart}
-                  updateCartState={this.updateCartState}
-                  updateDataStateOnRemoveFromCheckout={
-                    this.updateDataStateOnRemoveFromCheckout
-                  }
-                  updateFavoriteMeals={this.updateFavoriteMeals}
-                />
-              )}
-            />
-            <Route
-              path="/favorites"
-              render={() => (
-                <Favorites
-                  cart={cart}
-                  updateCartState={this.updateCartState}
-                  updateDataStateOnRemoveFromFavorites={
-                    this.updateDataStateOnRemoveFromFavorites
-                  }
-                />
-              )}
-            />
-            <Route
-              path="/checkout"
-              render={() => (
-                <Checkout
-                  cart={cart}
-                  updateCartState={this.updateCartState}
-                  updateDataStateOnRemoveFromCheckout={
-                    this.updateDataStateOnRemoveFromCheckout
-                  }
-                  updateFavoriteMeals={this.updateFavoriteMeals}
-                />
-              )}
-            />
-            <Route path="/error" component={PageNotFound} />
-          </div>
-        </Router>
-      );
-    }
-    return <PageNotFound />;
+    return data.length > 0 ? (
+      <Router>
+        <div>
+          <NavigationBar />
+          <Route
+            exact
+            path="/"
+            render={() => (
+              <Home
+                data={data}
+                cart={cart}
+                updateCartState={this.updateCartState}
+                updateDataStateOnRemoveFromCheckout={
+                  this.updateDataStateOnRemoveFromCheckout
+                }
+                updateFavoriteMeals={this.updateFavoriteMeals}
+              />
+            )}
+          />
+          <Route
+            path="/favorites"
+            render={() => (
+              <Favorites
+                cart={cart}
+                updateCartState={this.updateCartState}
+                updateDataStateOnRemoveFromFavorites={
+                  this.updateDataStateOnRemoveFromFavorites
+                }
+              />
+            )}
+          />
+          <Route
+            path="/checkout"
+            render={() => (
+              <Checkout
+                cart={cart}
+                updateCartState={this.updateCartState}
+                updateDataStateOnRemoveFromCheckout={
+                  this.updateDataStateOnRemoveFromCheckout
+                }
+                updateFavoriteMeals={this.updateFavoriteMeals}
+              />
+            )}
+          />
+          <Route path="/error" component={PageNotFound} />
+        </div>
+      </Router>
+    ) : (
+      <PageNotFound />
+    );
   }
 }
 

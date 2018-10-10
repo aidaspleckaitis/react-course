@@ -67,10 +67,10 @@ class Favorites extends React.Component {
   render() {
     const { favoriteDishes } = this.state;
 
-    return (
+    return favoriteDishes.length > 0 ? (
       <Grid container justify="center">
         <Grid item xs={12}>
-          <h3 className="Home-container-title">Your favorite meals:</h3>
+          <h3 className="Home-container-title">Your favorite meals</h3>
         </Grid>
         {favoriteDishes.map((dish, index) => (
           <Dish
@@ -81,12 +81,24 @@ class Favorites extends React.Component {
           />
         ))}
       </Grid>
+    ) : (
+      <h3
+        className="Home-container-title"
+        style={{
+          textAlign: 'center',
+          marginTop: '2%',
+          marginLeft: 0,
+        }}
+      >
+        No favourite meals added
+      </h3>
     );
   }
 }
 
 Favorites.propTypes = {
   updateCartState: PropTypes.func.isRequired,
+  updateDataStateOnRemoveFromFavorites: PropTypes.func.isRequired,
 };
 
 export default Favorites;

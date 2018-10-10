@@ -80,7 +80,7 @@ class Checkout extends React.Component {
 
     return cart.length > 0 ? (
       <div className="Checkout-container">
-        <h2>Checkout stage</h2>
+        <h3 className="Checkout-title">Meals in cart</h3>
         <div className="Checkout-cart-container">
           <ul className="Checkout-list-container">
             <section>
@@ -97,11 +97,27 @@ class Checkout extends React.Component {
               />
             </section>
           </ul>
-          <Button>Checkout</Button>
+          <Button
+            style={{
+              backgroundColor: '#ff3b3f',
+              color: 'white',
+              borderRadius: '0 3px 3px 0',
+            }}
+          >
+            Checkout
+          </Button>
         </div>
       </div>
     ) : (
-      <h2>Cart is empty.</h2>
+      <h2
+        className="Checkout-title"
+        style={{
+          textAlign: 'center',
+          marginTop: '2%',
+        }}
+      >
+        Cart is empty
+      </h2>
     );
   }
 }
@@ -118,6 +134,7 @@ Checkout.propTypes = {
   ),
   updateCartState: PropTypes.func.isRequired,
   updateDataStateOnRemoveFromCheckout: PropTypes.func.isRequired,
+  updateFavoriteMeals: PropTypes.func.isRequired,
 };
 
 Checkout.defaultProps = {

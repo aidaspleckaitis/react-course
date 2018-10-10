@@ -19,7 +19,6 @@ class Home extends React.Component {
 
   // Update props because data param is collected from props which doesn't re-render. ANTI-PATERN
   componentWillReceiveProps(nextProps) {
-    console.log('nextProps: ', nextProps);
     this.setState({ data: nextProps.data });
   }
 
@@ -117,6 +116,8 @@ class Home extends React.Component {
 Home.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   updateCartState: PropTypes.func.isRequired,
+  updateDataStateOnRemoveFromCheckout: PropTypes.func.isRequired,
+  updateFavoriteMeals: PropTypes.func.isRequired,
 };
 
 export default Home;

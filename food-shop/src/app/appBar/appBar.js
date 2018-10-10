@@ -10,29 +10,27 @@ import { withStyles } from '@material-ui/core/styles';
 // React Router
 import { Link } from 'react-router-dom';
 
-const APP_ICON =
-  'http://travelpedia.com.br/wp-content/uploads/2018/01/icon-food-and-beverage.png';
-
 const styles = () => ({
   appBar: {
-    backgroundColor: '#162115',
+    backgroundColor: 'white',
   },
   font: {
-    fontFamily: 'Shojumaru',
+    fontFamily: 'Cookie',
   },
   button: {
-    fontFamily: 'Shojumaru',
-    color: 'white',
-    marginRight: '40px',
+    fontFamily: 'Bree Serif',
+    fontSize: 15,
+    color: 'dark',
+    marginRight: 40,
     '&:hover': {
-      backgroundColor: 'orangered',
+      backgroundColor: '#a9a9a9',
     },
   },
 });
 
 function NavigationBar(props) {
   const { classes } = props;
-  console.log('classes: ', classes);
+
   return (
     <AppBar position="static" classes={{ root: classes.appBar }}>
       <Toolbar>
@@ -63,7 +61,7 @@ function NavigationBar(props) {
             Greatest sushi&#39;s ever
           </Typography>
         </div>
-        <img className="App-icon" src={APP_ICON} alt="App icon" />
+        {/* <img className="App-icon" src={APP_ICON} alt="App icon" /> */}
       </Toolbar>
     </AppBar>
   );
