@@ -18,7 +18,6 @@ function Navbar({ routes }) {
 
 Navbar.propTypes = {
   routes: PropTypes.arrayOf(PropTypes.string).isRequired,
-  changeRoute: PropTypes.func.isRequired,
 };
 
 export default Navbar;

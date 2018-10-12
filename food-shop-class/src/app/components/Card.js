@@ -5,7 +5,7 @@ const FontAwesome = require('react-fontawesome');
 
 function Card({ addToFavorites, addToCart, data }) {
   const { image, name, price, currencySymbol, description } = data;
-
+  console.log('description', data);
   return (
     <section className="App-card">
       <img src={image} alt={name} />
@@ -22,7 +22,7 @@ function Card({ addToFavorites, addToCart, data }) {
           </div>
         </div>
         <div className="App-card__description">
-          {description.substring(0, 50)}
+          {description && description.substring(0, 50)}
           ...
         </div>
       </div>

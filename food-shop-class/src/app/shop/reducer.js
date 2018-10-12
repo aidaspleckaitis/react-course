@@ -13,9 +13,9 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, favorites: [...state.favorites, data] };
     case 'ADD_TO_CART':
       return { ...state, cart: [...state.cart, data] };
-    case 'FETCH_PRODUCTS_SUCCESS':
-      return { ...state, products: [...state.products, data] };
-    case 'FETCH_PRODUCTS_FAILURE':
+    case 'SET_PRODUCTS':
+      return { ...state, products: [...state.products, ...data] };
+    case 'SET_PRODUCTS_ERROR':
       return { ...state, error: data };
     default:
       return state;
