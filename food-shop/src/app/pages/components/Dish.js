@@ -32,7 +32,7 @@ function Dish(props) {
     dish,
     addToFavorites,
     removeFromFavorites,
-    addToCart,
+    onAddMealToCart,
     classes,
   } = props;
   return (
@@ -76,7 +76,7 @@ function Dish(props) {
             )}
             <IconButton
               aria-label="Add to favorites"
-              onClick={() => addToCart(dish)}
+              onClick={() => onAddMealToCart(dish)}
               classes={{ root: classes.iconButton }}
             >
               <ShoppingBasket style={dish.count ? { fill: '#1a2930' } : null} />
@@ -97,7 +97,7 @@ Dish.propTypes = {
   ).isRequired,
   addToFavorites: PropTypes.func,
   removeFromFavorites: PropTypes.func,
-  addToCart: PropTypes.func.isRequired,
+  onAddMealToCart: PropTypes.func.isRequired,
   classes: PropTypes.objectOf(PropTypes.string),
 };
 

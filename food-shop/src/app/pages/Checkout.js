@@ -3,80 +3,65 @@ import PropTypes from 'prop-types';
 import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
 
+import { connect } from 'react-redux';
+import shop from '../shop';
+
 import CartItem from './components/CartItem';
 
 class Checkout extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      cart: props.cart,
-      cartValue: 0,
-    };
-  }
-
-  componentDidMount() {
-    const { cart } = this.state;
-
-    this.calculatePrice(cart);
-  }
-
   // Handles price calculations
-  calculatePrice = cart => {
-    const { cartValue } = this.state;
-    let fullPrice = Number(cartValue);
+  calculatePrice = () => {
+    const { cart } = this.props;
+    let fullPrice = 0;
 
     cart.forEach(cartItem => {
-      fullPrice += Number(cartItem.recipe_id * cartItem.count);
+      fullPrice += Number(cartItem.recipe_id) * cartItem.count;
     });
 
-    this.setState({ cartValue: fullPrice.toFixed(2) });
+    return fullPrice.toFixed(2);
   };
 
   // Recalculates cart value when meal is removed
-  recalculateCartValue = removedMealPrice => {
-    const { cartValue } = this.state;
+  // recalculateCartValue = removedMealPrice => {
+  //   const { cartValue } = this.state;
 
-    const newCartValue = (cartValue - removedMealPrice).toFixed(2);
+  //   const newCartValue = (cartValue - removedMealPrice).toFixed(2);
 
-    this.setState({ cartValue: newCartValue });
-  };
+  //   this.setState({ cartValue: newCartValue });
+  // };
 
   updateFavoriteMealsCartData = () => {};
 
   // Handles cart updates
-  updateCart = (mealID, removedMealPrice) => {
-    const { cart } = this.state;
-    const {
-      updateCartState,
-      updateDataStateOnRemoveFromCheckout,
-      updateFavoriteMeals,
-    } = this.props;
+  updateCart = mealID => {
+    const { cart, setCart, products } = this.props;
+
     const dishID = mealID;
 
     // Remove selected meal from cart
     const newCart = cart.filter(meal => meal.id !== dishID);
 
-    localStorage.setItem('cart', JSON.stringify(newCart));
+    products[dishID].count = 0;
 
+    setCart(newCart);
     // Update parent state's mainData
-    updateDataStateOnRemoveFromCheckout(null, dishID);
+    // updateDataStateOnRemoveFromCheckout(null, dishID);
 
-    // Update parent state's cart
-    updateCartState(null, newCart);
+    // // Update parent state's cart
+    // updateCartState(null, newCart);
 
-    // Update common state's cart
-    this.setState({ cart: newCart });
+    // // Update common state's cart
+    // this.setState({ cart: newCart });
 
-    // Update cart value when meal is removed
-    this.recalculateCartValue(removedMealPrice);
+    // // Update cart value when meal is removed
+    // this.recalculateCartValue(removedMealPrice);
 
-    // Update favorites data
-    updateFavoriteMeals(dishID, true);
+    // // Update favorites data
+    // updateFavoriteMeals(dishID, true);
   };
 
   render() {
-    const { cart, cartValue } = this.state;
+    const { cart } = this.props;
 
     return cart.length > 0 ? (
       <div className="Checkout-container">
@@ -93,7 +78,7 @@ class Checkout extends React.Component {
               ))}
               <Chip
                 style={{ marginLeft: '78%', marginTop: '3%' }}
-                label={`Cart value: €${cartValue}`}
+                label={`Cart value: €${this.calculatePrice()}`}
               />
             </section>
           </ul>
@@ -123,22 +108,21 @@ class Checkout extends React.Component {
 }
 
 Checkout.propTypes = {
-  cart: PropTypes.arrayOf(
-    PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number,
-      PropTypes.bool,
-      PropTypes.array,
-      PropTypes.object,
-    ])
-  ),
-  updateCartState: PropTypes.func.isRequired,
-  updateDataStateOnRemoveFromCheckout: PropTypes.func.isRequired,
-  updateFavoriteMeals: PropTypes.func.isRequired,
+  products: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  cart: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  setCart: PropTypes.func.isRequired,
 };
 
-Checkout.defaultProps = {
-  cart: undefined,
-};
+const mapStateToProps = state => ({
+  products: state.shop.products,
+  cart: state.shop.cart,
+});
 
-export default Checkout;
+const mapDispatchToProps = dispatch => ({
+  setCart: data => dispatch(shop.actions.setCart(data)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Checkout);
