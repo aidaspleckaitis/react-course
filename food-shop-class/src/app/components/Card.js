@@ -5,7 +5,6 @@ const FontAwesome = require('react-fontawesome');
 
 function Card({ addToFavorites, addToCart, data }) {
   const { image, name, price, currencySymbol, description } = data;
-  console.log('description', data);
   return (
     <section className="App-card">
       <img src={image} alt={name} />

@@ -39,7 +39,7 @@ class App extends React.Component {
         <div>
           <Switch>
             <Route exact path="/home" component={Home} />
-            <Redirect exact from="*" to="/home" />
+            {/* <Redirect exact from="*" to="/home" /> */}
             <Route exact path="/favorites" component={Favorites} />
             <Route exact path="/checkout" component={Checkout} />
             <Route path="/404" component={PageNotFound} />
@@ -63,8 +63,8 @@ App.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  products: state.shop.products,
-  error: state.shop.error,
+  products: shop.selectors.getProducts(state),
+  error: shop.selectors.getError(state),
 });
 
 const mapDispatchToProps = dispatch => ({
