@@ -1,4 +1,5 @@
 import { applyMiddleware } from 'redux';
+import { apiMiddleware } from 'redux-api-middleware';
 import ReduxThunk from 'redux-thunk';
 
 const logging = ({ getState, dispatch }) => next => action => {
@@ -6,4 +7,4 @@ const logging = ({ getState, dispatch }) => next => action => {
   return next(action);
 };
 
-export default applyMiddleware(ReduxThunk, logging);
+export default applyMiddleware(ReduxThunk, apiMiddleware, logging);
