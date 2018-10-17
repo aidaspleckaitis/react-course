@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { compose, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Route, Redirect, Switch, withRouter } from 'react-router-dom';
+import { AtomSpinner } from 'react-epic-spinners';
 
 import Home from './pages/Home';
 import Favorites from './pages/Favorites';
@@ -15,48 +16,48 @@ import shop from './shop';
 import './style/index.css';
 
 const ROUTES = ['home', 'favorites', 'checkout'];
-const ENDPOINT =
-  'https://boiling-reaches-93648.herokuapp.com/food-shop/products';
 
 class App extends React.Component {
   componentDidMount() {
-    const { setProducts, setProductsError, products } = this.props;
+    const { getProducts } = this.props;
 
-    if (!products.length) {
-      fetch(ENDPOINT)
-        .then(response => response.json())
-        .then(all => setProducts(all))
-        .catch(() => setProductsError());
-    }
+    getProducts();
   }
 
   render() {
-    const { error } = this.props;
+    const { error, fetching } = this.props;
 
-    return (
-      <div className="App-container">
-        <Navbar routes={ROUTES} />
-        {error && <h1>{error}</h1>}
-        <div>
-          <Switch>
-            <Route exact path="/home" component={Home} />
-            {/* <Redirect exact from="*" to="/home" /> */}
-            <Route exact path="/favorites" component={Favorites} />
-            <Route exact path="/checkout" component={Checkout} />
-            <Route path="/404" component={PageNotFound} />
-            <Redirect from="*" to="/404" />
-          </Switch>
+    if (fetching) {
+      return (
+        <div className="Spinner">
+          <AtomSpinner color="red" />
         </div>
-      </div>
-    );
+      );
+    } else {
+      return (
+        <div className="App-container">
+          <Navbar routes={ROUTES} />
+          {error && <h1>{error}</h1>}
+          <div>
+            <Switch>
+              <Route exact path="/home" component={Home} />
+              {/* <Redirect exact from="*" to="/home" /> */}
+              <Route exact path="/favorites" component={Favorites} />
+              <Route exact path="/checkout" component={Checkout} />
+              <Route path="/404" component={PageNotFound} />
+              <Redirect from="*" to="/404" />
+            </Switch>
+          </div>
+        </div>
+      );
+    }
   }
 }
 
 App.propTypes = {
-  setProducts: PropTypes.func.isRequired,
-  setProductsError: PropTypes.func.isRequired,
-  products: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  getProducts: PropTypes.func.isRequired,
   error: PropTypes.string,
+  fetching: PropTypes.bool.isRequired,
 };
 
 App.defaultProps = {
@@ -67,16 +68,11 @@ const enhance = compose(
   withRouter,
   connect(
     state => ({
-      products: shop.selectors.getProducts(state),
       error: shop.selectors.getError(state),
+      fetching: shop.selectors.isFetching(state),
     }),
-    dispatch => ({
-      setProducts: bindActionCreators(shop.actions.setProducts, dispatch), //data => dispatch(shop.actions.setProducts(data)),
-      setProductsError: bindActionCreators(
-        shop.actions.setProductsError,
-        dispatch
-      ),
-    })
+    dispatch =>
+      bindActionCreators({ getProducts: shop.actions.getProducts }, dispatch)
   )
 );
 

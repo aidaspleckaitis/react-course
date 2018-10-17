@@ -1,11 +1,7 @@
-import { createStore, applyMiddleware } from 'redux';
+import { createStore } from 'redux';
+import getMiddlewares from './getMiddlewares';
 import reducers from './reducers';
 
-const mid = ({ getState, dispatch }) => next => action => {
-  console.log('Middleware.');
-  return next(action);
-};
-
-const store = createStore(reducers, applyMiddleware(mid));
+const store = createStore(reducers, getMiddlewares);
 
 export default store;
